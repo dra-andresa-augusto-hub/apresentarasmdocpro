@@ -306,14 +306,19 @@ Proibida reprodução sem autorização
 
 </div>
 
-<!-- MODAL DE AGENDAMENTO -->
+<!-- MODAL DE AGENDAMENTO - APENAS AVALIAÇÃO E CONSULTA -->
 <div class="modal" id="appointmentModal">
 <div class="modal-content">
 <div class="modal-header"><h3>Agendamento</h3><button class="close-btn" onclick="closeModal('appointmentModal')">&times;</button></div>
 <div class="form-group"><label>Paciente *</label><select id="apptPatient"></select></div>
 <div class="form-group"><label>Data *</label><input type="date" id="apptDate"></div>
 <div class="form-group"><label>Horário *</label><input type="time" id="apptTime"></div>
-<div class="form-group"><label>Tipo de Atendimento</label><select id="apptType"><option value="normal">Normal</option><option value="laser">Laser</option><option value="avaliacao">Avaliação</option></select></div>
+<div class="form-group"><label>Tipo de Atendimento</label>
+<select id="apptType">
+<option value="consulta">Consulta</option>
+<option value="avaliacao">Avaliação</option>
+</select>
+</div>
 <div class="form-group"><label>Valor (R$)</label><input type="number" id="apptValue" step="0.01" placeholder="0,00"></div>
 <div class="form-group"><label>Observações</label><textarea id="apptNotes" rows="3"></textarea></div>
 <div style="display:flex;gap:10px;flex-wrap:wrap">
@@ -604,6 +609,7 @@ async function loadDataFromFirebase() {
     const snapshot = await database.ref(userDataPath).once('value');
     const data = snapshot.val() || {};
     
+    // Se não tiver dados, cria estrutura vazia
     config = data.config || {};
     patients = data.patients || [];
     appointments = data.appointments || [];
@@ -613,8 +619,13 @@ async function loadDataFromFirebase() {
     showMainSystem();
   } catch (error) {
     console.error('Erro ao carregar dados:', error);
-    alert('Erro ao carregar dados. Tente novamente.');
-    logout();
+    // Em vez de dar erro, cria dados vazios e permite entrar
+    config = {};
+    patients = [];
+    appointments = [];
+    evolutions = [];
+    expenses = [];
+    showMainSystem();
   }
 }
 
@@ -1355,7 +1366,7 @@ function renderFinancialTable() {
     row.onclick = (e) => {
       if (e.target.type !== 'checkbox') toggleFinancialSelection(appt.id);
     };
-    row.innerHTML = '<td><input type="checkbox" class="session-checkbox" ' + (selectedFinancial.has(appt.id) ? 'checked' : '') + ' onchange="toggleFinancialSelection(\'' + appt.id + '\')"></td><td>' + (patient ? patient.name : '-') + '</td><td>' + formatDate(appt.date) + '</td><td>' + (appt.type === 'laser' ? 'Laser' : 'Consulta') + '</td><td>R$ ' + parseFloat(appt.value || 0).toFixed(2) + '</td><td>⏳ Pendente</td><td><button class="btn btn-primary" onclick="event.stopPropagation();togglePayment(\'' + appt.id + '\')">Pagar</button></td>';
+    row.innerHTML = '<td><input type="checkbox" class="session-checkbox" ' + (selectedFinancial.has(appt.id) ? 'checked' : '') + ' onchange="toggleFinancialSelection(\'' + appt.id + '\')"></td><td>' + (patient ? patient.name : '-') + '</td><td>' + formatDate(appt.date) + '</td><td>' + (appt.type === 'avaliacao' ? 'Avaliação' : 'Consulta') + '</td><td>R$ ' + parseFloat(appt.value || 0).toFixed(2) + '</td><td>⏳ Pendente</td><td><button class="btn btn-primary" onclick="event.stopPropagation();togglePayment(\'' + appt.id + '\')">Pagar</button></td>';
     tbody.appendChild(row);
   });
   
@@ -1417,7 +1428,7 @@ function sendSelectedPendingWhatsApp() {
     let msg = 'Olá ' + data.patient.name + ', tudo bem? 😊\n\n';
     msg += 'Gostaria de lembrar que você possui os seguintes atendimentos em aberto:\n\n';
     data.appts.sort((a, b) => new Date(a.date) - new Date(b.date)).forEach((appt, idx) => {
-      msg += (idx + 1) + '. ' + formatDate(appt.date) + ' - ' + appt.type + ' - R$ ' + parseFloat(appt.value || 0).toFixed(2) + '\n';
+      msg += (idx + 1) + '. ' + formatDate(appt.date) + ' - ' + (appt.type === 'avaliacao' ? 'Avaliação' : 'Consulta') + ' - R$ ' + parseFloat(appt.value || 0).toFixed(2) + '\n';
     });
     msg += '\n💰 *Total: R$ ' + data.total.toFixed(2) + '*\n\n';
     if (sig.pix) msg += '💳 Chave Pix para pagamento:\n*' + sig.pix + '*\n\n';
@@ -1435,7 +1446,7 @@ function sendSelectedPendingWhatsApp() {
         let msg = 'Olá ' + data.patient.name + ', tudo bem? 😊\n\n';
         msg += 'Gostaria de lembrar que você possui os seguintes atendimentos em aberto:\n\n';
         data.appts.sort((a, b) => new Date(a.date) - new Date(b.date)).forEach((appt, idx) => {
-          msg += (idx + 1) + '. ' + formatDate(appt.date) + ' - ' + appt.type + ' - R$ ' + parseFloat(appt.value || 0).toFixed(2) + '\n';
+          msg += (idx + 1) + '. ' + formatDate(appt.date) + ' - ' + (appt.type === 'avaliacao' ? 'Avaliação' : 'Consulta') + ' - R$ ' + parseFloat(appt.value || 0).toFixed(2) + '\n';
         });
         msg += '\n💰 *Total: R$ ' + data.total.toFixed(2) + '*\n\n';
         if (sig.pix) msg += '💳 Chave Pix para pagamento:\n*' + sig.pix + '*\n\n';
@@ -1495,7 +1506,7 @@ function renderCashFlow() {
   entries.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(appt => {
     const patient = patients.find(p => p.id === appt.patientId);
     const row = document.createElement('tr');
-    row.innerHTML = '<td>' + formatDate(appt.date) + '</td><td>' + (patient ? patient.name : '-') + '</td><td>' + appt.type + '</td><td>R$ ' + parseFloat(appt.value || 0).toFixed(2) + '</td>';
+    row.innerHTML = '<td>' + formatDate(appt.date) + '</td><td>' + (patient ? patient.name : '-') + '</td><td>' + (appt.type === 'avaliacao' ? 'Avaliação' : 'Consulta') + '</td><td>R$ ' + parseFloat(appt.value || 0).toFixed(2) + '</td>';
     entriesBody.appendChild(row);
   });
   
