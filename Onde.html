@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASM DOCS Universal - Documentos Clínicos Profissionais</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --navy: #1e3a5f;
+            --navy-light: #2c5282;
+            --gold: #c9a227;
+            --gold-light: #e0c158;
+            --gray: #f7fafc;
+            --gray-dark: #4a5568;
+            --white: #ffffff;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--white);
+            color: var(--navy);
+            line-height: 1.6;
+        }
+        
+        /* Hero */
+        .hero {
+            background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+            padding: 5rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(201,162,39,0.15) 0%, transparent 70%);
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .logo-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(201,162,39,0.2);
+            border: 1px solid var(--gold);
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            color: var(--gold);
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--white);
+            margin-bottom: 1rem;
+            line-height: 1.1;
+        }
+        
+        .hero h1 span {
+            color: var(--gold);
+        }
+        
+        .hero-subtitle {
+            font-size: 1.3rem;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 3rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .price-highlight {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(201,162,39,0.3);
+            border-radius: 20px;
+            padding: 2rem;
+            display: inline-block;
+            margin-bottom: 2rem;
+        }
+        
+        .price-original {
+            text-decoration: line-through;
+            color: rgba(255,255,255,0.6);
+            font-size: 1.3rem;
+        }
+        
+        .price-current {
+            font-size: 4rem;
+            font-weight: 800;
+            color: var(--gold);
+        }
+        
+        .price-current small {
+            font-size: 1.5rem;
+        }
+        
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+            color: var(--navy);
+            padding: 1.5rem 3rem;
+            border-radius: 15px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            text-decoration: none;
+            box-shadow: 0 10px 30px rgba(201,162,39,0.4);
+            transition: all 0.3s ease;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(201,162,39,0.5);
+        }
+        
+        /* Value Prop */
+        .value-section {
+            padding: 5rem 2rem;
+            background: var(--gray);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+        
+        .section-header h2 {
+            font-size: 2.5rem;
+            color: var(--navy);
+            margin-bottom: 1rem;
+        }
+        
+        .section-header p {
+            color: var(--gray-dark);
+            font-size: 1.1rem;
+        }
+        
+        .value-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+        
+        .value-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 2.5rem;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .value-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+        
+        .value-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            color: var(--gold);
+        }
+        
+        .value-card h3 {
+            color: var(--navy);
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .value-card p {
+            color: var(--gray-dark);
+            font-size: 0.95rem;
+        }
+        
+        /* Comparison */
+        .comparison {
+            padding: 5rem 2rem;
+            background: var(--white);
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .comp-card {
+            border-radius: 25px;
+            padding: 3rem;
+        }
+        
+        .comp-card.without {
+            background: var(--gray);
+            border: 2px solid #e2e8f0;
+        }
+        
+        .comp-card.with {
+            background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+            color: var(--white);
+            position: relative;
+        }
+        
+        .comp-card.with::after {
+            content: 'MELHOR ESCOLHA';
+            position: absolute;
+            top: -12px;
+            right: 30px;
+            background: var(--gold);
+            color: var(--navy);
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+        
+        .comp-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .comp-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .without .comp-icon {
+            background: #fed7d7;
+            color: #c53030;
+        }
+        
+        .with .comp-icon {
+            background: rgba(201,162,39,0.2);
+            color: var(--gold);
+        }
+        
+        .comp-card h3 {
+            font-size: 1.5rem;
+        }
+        
+        .comp-list {
+            list-style: none;
+        }
+        
+        .comp-list li {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .with .comp-list li {
+            border-bottom-color: rgba(255,255,255,0.1);
+        }
+        
+        .comp-list li:last-child {
+            border-bottom: none;
+        }
+        
+        /* Professions */
+        .professions {
+            padding: 5rem 2rem;
+            background: var(--gray);
+        }
+        
+        .prof-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+        
+        .prof-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .prof-card:hover {
+            border-color: var(--gold);
+            transform: translateY(-5px);
+        }
+        
+        .prof-icon-box {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            color: var(--gold);
+        }
+        
+        .prof-card h4 {
+            color: var(--navy);
+            margin-bottom: 0.5rem;
+        }
+        
+        .prof-card p {
+            color: var(--gray-dark);
+            font-size: 0.9rem;
+        }
+        
+        /* Final CTA */
+        .final-cta {
+            padding: 5rem 2rem;
+            background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+            text-align: center;
+        }
+        
+        .final-cta h2 {
+            color: var(--white);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .final-cta h2 span {
+            color: var(--gold);
+        }
+        
+        .final-cta p {
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 2rem;
+        }
+        
+        .final-price {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(201,162,39,0.3);
+            border-radius: 20px;
+            padding: 2rem;
+            display: inline-block;
+            margin-bottom: 2rem;
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--navy-dark);
+            color: var(--white);
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+        
+        footer .copyright {
+            color: var(--gold);
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .value-grid,
+            .prof-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="hero">
+        <div class="hero-content">
+            <div class="logo-badge">
+                <i data-lucide="sparkles" style="width: 18px; height: 18px;"></i>
+                KIT COMPLETO DE DOCUMENTOS CLÍNICOS
+            </div>
+            
+            <h1>
+                Seus documentos clínicos
+                <span>profissionais em segundos</span>
+            </h1>
+            
+            <p class="hero-subtitle">
+                Pare de perder tempo criando documentos do zero. 
+                Tenha acesso a mais de 50 modelos profissionais validados para sua área da saúde.
+            </p>
+            
+            <div class="price-highlight">
+                <div class="price-original">De R$ 227,90</div>
+                <div class="price-current">
+                    <small>R$</small>167,90
+                </div>
+                <p style="color: rgba(255,255,255,0.8); margin-top: 0.5rem;">Pagamento único</p>
+            </div>
+            
+            <br>
+            
+            <a href="https://wa.me/5531997867911?text=Olá! Quero garantir meu ASM DOCS Universal por R$167,90" class="cta-button" target="_blank">
+                <i data-lucide="zap" style="width: 24px; height: 24px;"></i>
+                GARANTIR MEU ACESSO
+            </a>
+        </div>
+    </section>
+
+    <section class="value-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Por que escolher o ASM DOCS?</h2>
+                <p>Desenvolvido por quem entende da rotina clínica</p>
+            </div>
+            
+            <div class="value-grid">
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i data-lucide="clock" style="width: 32px; height: 32px;"></i>
+                    </div>
+                    <h3>Economize Tempo</h3>
+                    <p>Documentos que levavam 30 minutos agora prontos em 2 minutos. Mais tempo para seus pacientes.</p>
+                </div>
+                
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i data-lucide="award" style="width: 32px; height: 32px;"></i>
+                    </div>
+                    <h3>Profissionalismo</h3>
+                    <p>Documentos com layout profissional que transmitem credibilidade e confiança aos seus pacientes.</p>
+                </div>
+                
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i data-lucide="shield-check" style="width: 32px; height: 32px;"></i>
+                    </div>
+                    <h3>Segurança Legal</h3>
+                    <p>Todos os documentos seguem as normativas dos conselhos profissionais (CFM, CREFITO, CRN, etc).</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="comparison">
+        <div class="container">
+            <div class="section-header">
+                <h2>Como está sua rotina?</h2>
+                <p>Compare sua realidade atual com o que você pode ter</p>
+            </div>
+            
+            <div class="comparison-grid">
+                <div class="comp-card without">
+                    <div class="comp-header">
+                        <div class="comp-icon">
+                            <i data-lucide="x" style="width: 24px; height: 24px;"></i>
+                        </div>
+                        <h3>Sem o ASM DOCS</h3>
+                    </div>
+                    <ul class="comp-list">
+                        <li><i data-lucide="x-circle" style="width: 20px; height: 20px; color: #c53030;"></i> <span>Horas perdidas com documentação</span></li>
+                        <li><i data-lucide="x-circle" style="width: 20px; height: 20px; color: #c53030;"></i> <span>Documentos amadores</span></li>
+                        <li><i data-lucide="x-circle" style="width: 20px; height: 20px; color: #c53030;"></i> <span>Risco de não conformidade</span></li>
+                        <li><i data-lucide="x-circle" style="width: 20px; height: 20px; color: #c53030;"></i> <span>Prontuários desorganizados</span></li>
+                    </ul>
+                </div>
+                
+                <div class="comp-card with">
+                    <div class="comp-header">
+                        <div class="comp-icon">
+                            <i data-lucide="check" style="width: 24px; height: 24px;"></i>
+                        </div>
+                        <h3>Com o ASM DOCS</h3>
+                    </div>
+                    <ul class="comp-list">
+                        <li><i data-lucide="check-circle" style="width: 20px; height: 20px; color: var(--gold);"></i> <span>Documentos em 2 minutos</span></li>
+                        <li><i data-lucide="check-circle" style="width: 20px; height: 20px; color: var(--gold);"></i> <span>Layout profissional impecável</span></li>
+                        <li><i data-lucide="check-circle" style="width: 20px; height: 20px; color: var(--gold);"></i> <span>Dentro de todas as normas</span></li>
+                        <li><i data-lucide="check-circle" style="width: 20px; height: 20px; color: var(--gold);"></i> <span>Tudo organizado na nuvem</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="professions">
+        <div class="container">
+            <div class="section-header">
+                <h2>Para qual profissão você precisa?</h2>
+                <p>Documentos específicos para cada área da saúde</p>
+            </div>
+            
+            <div class="prof-grid">
+                <div class="prof-card">
+                    <div class="prof-icon-box">
+                        <i data-lucide="activity" style="width: 36px; height: 36px;"></i>
+                    </div>
+                    <h4>Fisioterapia</h4>
+                    <p>Avaliações, evoluções, altas e mais</p>
+                </div>
+                
+                <div class="prof-card">
+                    <div class="prof-icon-box">
+                        <i data-lucide="apple" style="width: 36px; height: 36px;"></i>
+                    </div>
+                    <h4>Nutrição</h4>
+                    <p>Anamneses, planos alimentares, avaliações</p>
+                </div>
+                
+                <div class="prof-card">
+                    <div class="prof-icon-box">
+                        <i data-lucide="brain" style="width: 36px; height: 36px;"></i>
+                    </div>
+                    <h4>Psicologia</h4>
+                    <p>Anamneses, evoluções, encaminhamentos</p>
+                </div>
+                
+                <div class="prof-card">
+                    <div class="prof-icon-box">
+                        <i data-lucide="stethoscope" style="width: 36px; height: 36px;"></i>
+                    </div>
+                    <h4>Medicina</h4>
+                    <p>Atestados, prescrições, relatórios</p>
+                </div>
+                
+                <div class="prof-card">
+                    <div class="prof-icon-box">
+                        <i data-lucide="mic" style="width: 36px; height: 36px;"></i>
+                    </div>
+                    <h4>Fonoaudiologia</h4>
+                    <p>Avaliações, laudos, evoluções</p>
+                </div>
+                
+                <div class="prof-card">
+                    <div class="prof-icon-box">
+                        <i data-lucide="hand" style="width: 36px; height: 36px;"></i>
+                    </div>
+                    <h4>Terapia Ocupacional</h4>
+                    <p>Avaliações, planos terapêuticos</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="final-cta">
+        <h2>Pronto para <span>profissionalizar</span> seus documentos?</h2>
+        <p>Invista na sua imagem profissional e na satisfação dos seus pacientes</p>
+        
+        <div class="final-price">
+            <div style="color: rgba(255,255,255,0.7); text-decoration: line-through; font-size: 1.2rem;">R$ 227,90</div>
+            <div style="font-size: 3.5rem; font-weight: 800; color: var(--gold);">
+                <small style="font-size: 1.5rem;">R$</small>167,90
+            </div>
+        </div>
+        
+        <br>
+        
+        <a href="https://wa.me/5531997867911?text=Olá! Quero garantir meu ASM DOCS Universal por R$167,90" class="cta-button" target="_blank">
+            <i data-lucide="shopping-cart" style="width: 24px; height: 24px;"></i>
+            QUERO MEU ASM DOCS AGORA
+        </a>
+        
+        <p style="margin-top: 2rem; font-size: 0.9rem; opacity: 0.8;">
+            Atendimento: Segunda a Sexta, 8h às 18h
+        </p>
+    </section>
+
+    <footer>
+        <p style="font-size: 1.2rem; font-weight: 600;">ASM DOCS Universal</p>
+        <p class="copyright">© 2026 - Proibida reprodução sem autorização</p>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
